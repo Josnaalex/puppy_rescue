@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:newapp/widgets/login.dart';
 import 'package:newapp/widgets/report.dart';
+import 'package:newapp/widgets/shelterlogin.dart';
 
 class MyWidget extends StatelessWidget {
   const MyWidget({Key? key}) : super(key: key);
@@ -14,14 +15,25 @@ class MyWidget extends StatelessWidget {
         backgroundColor: Colors.brown,
       ),
       drawer: Drawer(
-        child:ListView(padding:EdgeInsets.zero,
+        child:ListView(
+          padding:EdgeInsets.zero,
         children: [
-          const DrawerHeader(
+          UserAccountsDrawerHeader(
+            accountName: Text("Menu"),
+            accountEmail: Text(""),
             decoration: BoxDecoration(
-              color: Colors.brown,
+              image: DecorationImage(
+                image: AssetImage('images/drawer.jpg'),
+                fit: BoxFit.cover
+                )
             ),
-            child: Text('Menu'),
-          ),
+            ),
+          // const DrawerHeader(
+          //   decoration: BoxDecoration(
+          //     color: Colors.brown,
+          //   ),
+          //   child: Text('Menu'),
+          // ),
           ListTile(
             title: const Text('Report'),
             onTap: (){
@@ -33,11 +45,21 @@ class MyWidget extends StatelessWidget {
             },
           ),
           ListTile(
-            title: const Text("Sign In"),
+            title: const Text("Sign In as User"),
             onTap: (){
               Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => SignInScreen()),
+    );
+
+            },
+          ),
+          ListTile(
+            title: const Text("Sign In as Animal Shelter"),
+            onTap: (){
+              Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => SignInShelter()),
     );
 
             },
