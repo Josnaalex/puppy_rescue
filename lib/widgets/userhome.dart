@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:newapp/widgets/report.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -50,7 +51,10 @@ class _UserHomeState extends State<UserHome> {
             ListTile(
             title: const Text('Report'),
             onTap: (){
-              
+              Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => LocationAndImageForm()),
+  );
 
             },
           ),
@@ -110,22 +114,10 @@ class _UserHomeState extends State<UserHome> {
                                 Text('Location: ${puppyList[index]['shelter_location']}')
                               ],
                             ),
-                            trailing: SizedBox(
-                              height: 40,
-                              width: 60,
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  color: Colors.blueGrey,
-                                  shape: BoxShape.rectangle,
-                                  borderRadius: BorderRadius.all(Radius.circular(10)),
-                                ),
-                                child: Padding(padding: EdgeInsets.all(5.0),
-                                child: GestureDetector(onTap: (){
+                            trailing: ElevatedButton(onPressed:() {
                                   Navigator.pushNamed(context, '/adopt');
-                                }),
-                                ),
-                              ),
-                            ),
+
+                            }, child: Text('Adopt'))
                           ),
                         );
                       }

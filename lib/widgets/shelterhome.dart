@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:newapp/widgets/addpuppy.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 class ShelterHome extends StatefulWidget {
   const ShelterHome({super.key});
 
@@ -7,6 +10,8 @@ class ShelterHome extends StatefulWidget {
 }
 
 class _ShelterHomeState extends State<ShelterHome> {
+   dynamic userId;
+  bool isLoading = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -41,10 +46,25 @@ class _ShelterHomeState extends State<ShelterHome> {
 
             }
           ),
+           ListTile(
+            title: const Text("Sign Out"),
+            onTap: ()async{
+               
+            final prefs = await SharedPreferences.getInstance();
+
+              await prefs.remove('userID');
+
+                // ignore: use_build_context_synchronously
+                Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
+            }
+          ),
           ListTile(
             title: const Text("Add Puppy"),
             onTap: (){
-
+              Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => AddPuppy()),
+              );
             }
           ),
         ],
@@ -52,5 +72,15 @@ class _ShelterHomeState extends State<ShelterHome> {
       ),
       
     );
+  }
+  Future getUserId() async {
+    setState(() {
+      isLoading = true;
+    });
+    final prefs = await SharedPreferences.getInstance();
+    userId = prefs.getInt('userID');
+    setState(() {
+      isLoading = false;
+    });
   }
 }
