@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:newapp/widgets/addpuppy.dart';
+import 'package:newapp/widgets/viewreports.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ShelterHome extends StatefulWidget {
@@ -37,7 +38,10 @@ class _ShelterHomeState extends State<ShelterHome> {
             ListTile(
             title: const Text("Reports"),
             onTap: (){
-
+              Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => ViewReports()),
+  );
             }
           ),
           ListTile(
