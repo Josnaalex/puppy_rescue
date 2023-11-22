@@ -115,7 +115,9 @@ class _UserHomeState extends State<UserHome> {
                               ],
                             ),
                             trailing: ElevatedButton(onPressed:() {
-                                  Navigator.pushNamed(context, '/adopt');
+                                  Navigator.pushNamed(context, '/adopt', arguments: {
+                                    'adoptionId':puppyList[index]['id']
+                                  });
 
                             }, child: Text('Adopt'))
                           ),

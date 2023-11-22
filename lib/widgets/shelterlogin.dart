@@ -54,6 +54,10 @@ const InputDecoration(
  
 'Please enter your email address';
                   }
+              final regex = RegExp(r'\w+@\w+\.\w+');
+              if (!regex.hasMatch(value)) {
+                return 'Please enter a valid email address';
+              }
                   return null;
                 },
               ),
@@ -70,6 +74,9 @@ const InputDecoration(
  
 'Please enter your password';
                   }
+                  if (value.length < 6) {
+      return 'Password must be at least 6 characters long';
+    }
                   return
  
 null;
@@ -88,7 +95,13 @@ null;
                     final data = await supabase
                       .from('shelters')
                       .select('id')
-                      .match({'email': email, 'password': pword}); // Pass in email and pword to select statement
+                      .match({'email': email, 'password': pword}); 
+                      if (data.length == 0) {
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Text('Invalid email or password'),
+                            backgroundColor: Colors.red,
+                          ));
+                          }// Pass in email and pword to select statement
                     if(data.length > 0){
                       final prefs = await SharedPreferences.getInstance();
                       await prefs.setInt('userID', data[0]['id']);
