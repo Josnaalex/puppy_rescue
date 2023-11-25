@@ -23,7 +23,7 @@ class _ViewReportsState extends State<ViewReports> {
 
     
   }
-
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -64,9 +64,11 @@ class _ViewReportsState extends State<ViewReports> {
                               ],
                             ),
                             trailing: ElevatedButton(onPressed:() {
-                                  Navigator.pushNamed(context, '/adopt');
+                                  Navigator.pushNamed(context, '/viewpuppy',arguments: {
+                                    'reportId':reportList[index]['id'],
+                                  });
 
-                            }, child: Text('Done'))
+                            }, child: Text('View'))
                           ),
                         );
                       }
@@ -86,7 +88,7 @@ class _ViewReportsState extends State<ViewReports> {
     final userId = prefs.getInt('userID');
     reportList = await Supabase.instance.client
       .from('reports')
-      .select('location, landmark')
+      .select('id,location, landmark')
       .match({'shelter_id' : userId});
     setState(() {
       isLoading = false;

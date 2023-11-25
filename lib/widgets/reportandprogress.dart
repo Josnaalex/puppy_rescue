@@ -2,8 +2,9 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:geolocator/geolocator.dart';
+// import 'package:geolocator/geolocator.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LocationAndImageForm extends StatefulWidget {
   const LocationAndImageForm({Key? key}) : super(key: key);
@@ -34,6 +35,8 @@ class _LocationAndImageFormState extends State<LocationAndImageForm> {
   XFile? _image;
   String _location = '';
   dynamic imageFile;
+  dynamic userId;
+  bool isLoading = false;
 
   @override
   void initState() {
@@ -46,9 +49,12 @@ class _LocationAndImageFormState extends State<LocationAndImageForm> {
 
   Future<void> _fetchData() async {
     final supabase = Supabase.instance.client;
-
+    setState(() {
+      isLoading = true;
+    });
+    final prefs = await SharedPreferences.getInstance();
+    userId = prefs.getInt('userID');
     final data = await supabase.from('shelters').select('location, id');
-    print(data);
     // print(response);
     // if (response != null) {
     //   // Handle error
@@ -68,16 +74,16 @@ class _LocationAndImageFormState extends State<LocationAndImageForm> {
     setState(() {
       animalShelters = shelterNames;
       _selectedShelter = animalShelters.first;
+      isLoading = false;
     });
   }
-  
 
   Future<void> _pickImage() async {
     final pickedImage =
         await _imagePicker.pickImage(source: ImageSource.camera);
     if (pickedImage != null) {
-        final imagePath = pickedImage.path;
-        imageFile = File(imagePath);
+      final imagePath = pickedImage.path;
+      imageFile = File(imagePath);
 
       //   final supabase = Supabase.instance.client;
       //   final String weblink = await supabase.storage.from('stray').upload(
@@ -93,17 +99,17 @@ class _LocationAndImageFormState extends State<LocationAndImageForm> {
     }
   }
 
-  Future<void> _getCurrentLocation() async {
-    try {
-      final Position position = await Geolocator.getCurrentPosition(
-          desiredAccuracy: LocationAccuracy.high);
-      setState(() {
-        _location = '${position.latitude}, ${position.longitude}';
-      });
-    } catch (e) {
-      print('Error getting location: $e');
-    }
-  }
+  // Future<void> _getCurrentLocation() async {
+  //   try {
+  //     final Position position = await Geolocator.getCurrentPosition(
+  //         desiredAccuracy: LocationAccuracy.high);
+  //     setState(() {
+  //       _location = '${position.latitude}, ${position.longitude}';
+  //     });
+  //   } catch (e) {
+  //     print('Error getting location: $e');
+  //   }
+  // }
 
   Future<void> insertReport() async {
     print(shelterIds[_selectedShelter]);
@@ -114,14 +120,15 @@ class _LocationAndImageFormState extends State<LocationAndImageForm> {
       'landmark': _landController.text,
       'shelter_id': shelterIds[_selectedShelter],
       'image_url': _image?.path,
+      'user_id': userId,
     };
 
     final res = await supabase.from('reports').insert(report).select();
-     await supabase.storage.from('stray').upload(
-        'puppy/${res[0]['id']}.jpg',
-        imageFile,
-        fileOptions: const FileOptions(cacheControl: '3600', upsert: false),
-      );
+    await supabase.storage.from('stray').upload(
+          'puppy/${res[0]['id']}.jpg',
+          imageFile,
+          fileOptions: const FileOptions(cacheControl: '3600', upsert: false),
+        );
   }
 
   @override

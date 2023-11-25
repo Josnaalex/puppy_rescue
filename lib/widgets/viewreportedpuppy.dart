@@ -1,32 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-  final client = Supabase.instance.client;
 
-
-class AdoptPuppy extends StatefulWidget {
-  const AdoptPuppy({super.key});
+class ViewPuppy extends StatefulWidget {
+  const ViewPuppy({super.key});
 
   @override
-  State<AdoptPuppy> createState() => _AdoptPuppyState();
+  State<ViewPuppy> createState() => _ViewPuppyState();
 }
 
-class _AdoptPuppyState extends State<AdoptPuppy> {
+class _ViewPuppyState extends State<ViewPuppy> {
+  @override
   String _imageURL = '';
    dynamic userId;
   bool isLoading = false;
-  dynamic adoptionDetails;
 
   @override
    void initState() {
     super.initState();
     Future.delayed(Duration.zero,(){
-      adoptionDetails = ModalRoute.of(context)?.settings.arguments as Map?;
+      final reportId = ModalRoute.of(context)?.settings.arguments as Map?;
       // Fetch image URL from Supabase storage
       final supabase = Supabase.instance.client;
       final String publicUrl = supabase.storage
-        .from('adoption') // Replace with your bucket name
-        .getPublicUrl("puppy1/${adoptionDetails!['adoptionId']}.jpg") ;// Replace with your image path
+        .from('stray') // Replace with your bucket name
+        .getPublicUrl("puppy/${reportId!['reportId']}.jpg") ;// Replace with your image path
           setState(() {
             _imageURL = publicUrl;
           });
@@ -35,8 +33,7 @@ class _AdoptPuppyState extends State<AdoptPuppy> {
     });
     
   }
-  
-    Widget build(BuildContext context) {
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('Puppy Image'),
@@ -49,9 +46,9 @@ class _AdoptPuppyState extends State<AdoptPuppy> {
                 : CircularProgressIndicator(),  
           ),
           ElevatedButton(onPressed: () {
-            request();
+            // request();
           } ,
-           child: Text('Request for Adoption'))
+           child: Text('Found'))
         ],
       ),
     );
@@ -64,16 +61,6 @@ class _AdoptPuppyState extends State<AdoptPuppy> {
     userId = prefs.getInt('userID');
     setState(() {
       isLoading = false;
-    });
-  }
-  Future<void> request() async {
-
-
-     await client.from('adoption_requests').insert({
-      'user_id': userId,
-      'shelter_id': adoptionDetails['shelterId'],
-      'adoption_id': adoptionDetails!['adoptionId'],
-
     });
   }
 }

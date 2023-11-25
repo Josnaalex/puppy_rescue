@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:newapp/widgets/adopt.dart';
+import 'package:newapp/widgets/adoptionrequests.dart';
 import 'package:newapp/widgets/shelterhome.dart';
 import 'package:newapp/widgets/shelterlogin.dart';
 import 'package:newapp/widgets/userhome.dart';
+import 'package:newapp/widgets/viewreportedpuppy.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:newapp/widgets/container.dart';
 
@@ -29,6 +31,8 @@ class MyApp extends StatelessWidget {
         '/adopt' : (context) => const AdoptPuppy(),
         '/shelterlogin' : (context) => const SignInShelter(),
         '/shelterhome' : (context) => const ShelterHome(),
+        '/viewpuppy' : (context) => const ViewPuppy(),
+        '/adoptionrequests' : (context) => const AdoptionRequests(),
       }
     );
   }
