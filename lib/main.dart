@@ -1,19 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:newapp/widgets/adopt.dart';
 import 'package:newapp/widgets/adoptionrequests.dart';
 import 'package:newapp/widgets/shelterhome.dart';
 import 'package:newapp/widgets/shelterlogin.dart';
 import 'package:newapp/widgets/userhome.dart';
 import 'package:newapp/widgets/viewreportedpuppy.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:newapp/widgets/container.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
+   await dotenv.load(fileName: ".env");
   await Supabase.initialize(
     url: 'https://azhhmgrywphfdssxwzym.supabase.co',
     anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF6aGhtZ3J5d3BoZmRzc3h3enltIiwicm9sZSI6ImFub24iLCJpYXQiOjE2OTc1NDM5OTMsImV4cCI6MjAxMzExOTk5M30.SU1HK1ttcYIlchuxGl7tmI31_R9NZQTWACnVqGEjhEQ'
   );
+  OneSignal.shared.setAppId(dotenv.env['APP_ID']!);
   runApp(MyApp());
 }
 // void main() => runApp(const MyApp());

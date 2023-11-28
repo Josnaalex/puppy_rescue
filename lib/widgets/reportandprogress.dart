@@ -1,10 +1,13 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:image_picker/image_picker.dart';
 // import 'package:geolocator/geolocator.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
 
 class ReportAndProgress extends StatefulWidget {
   const ReportAndProgress({Key? key}) : super(key: key);
@@ -155,6 +158,28 @@ class _ReportAndProgressState extends State<ReportAndProgress> {
       }
     );
   }
+  Future sendPushNotification(String userId, String message) async {
+
+    await dotenv.load(fileName: ".env");
+
+    var headers = {
+      'Content-Type': 'application/json',
+      'Authorization': dotenv.env['URL']!,
+    };
+
+    var body = {
+      'app_id': dotenv.env['APP_ID']!,
+      'include_player_ids': [userId],
+      'contents': {'en': message},
+    };
+
+    await http.post(
+      Uri.parse("https://onesignal.com/api/v1/notifications"),
+      headers: headers,
+      body: jsonEncode(body),
+    );
+
+  }
 
   Future<void> insertReport() async {
     print(shelterIds[_selectedShelter]);
@@ -174,6 +199,15 @@ class _ReportAndProgressState extends State<ReportAndProgress> {
           imageFile,
           fileOptions: const FileOptions(cacheControl: '3600', upsert: false),
         );
+    final prefs = await SharedPreferences.getInstance();
+    final userID = prefs.getInt('userID');
+    final shelter = await supabase.from('shelters').select('onesignaluserid').match({
+      'id':userID
+    });
+    final message = "A new puppy is reported at ${_locController.text}.";
+
+    sendPushNotification(shelter[0]['onesignaluserid'], message);
+
   }
 
   @override

@@ -170,23 +170,24 @@ class _AdoptionRequestsState extends State<AdoptionRequests> {
         .from('adoption_requests')
         .select()
         .match({'shelter_id': userId,})
-        .neq('stauts', 'accepted');
+        .neq('status', 'accepted');
 
     print(requestList);
     if (requestList.length != 0) {
       adoptionId = requestList[0]['adoption_id'];
       requestedUser = requestList[0]['user_id'];
+    
+      userDetails = await supabase
+          .from('users')
+          .select('name,address')
+          .match({'id': requestedUser});
+      puppyDetails = await supabase
+          .from('adoption')
+          .select('breed,age')
+          .match({'id': adoptionId});
     }
     setState(() {
-      isLoading = false;
-    });
-    userDetails = await supabase
-        .from('users')
-        .select('name,address')
-        .match({'id': requestedUser});
-    puppyDetails = await supabase
-        .from('adoption')
-        .select('breed,age')
-        .match({'id': adoptionId});
+        isLoading = false;
+      });
   }
 }

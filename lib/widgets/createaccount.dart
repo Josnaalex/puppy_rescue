@@ -139,7 +139,6 @@ null;
       'email': email,
       'password': password,
       'address': address,
-
     });
 
     // if (response.error != null) {

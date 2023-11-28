@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:newapp/widgets/createaccount.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -101,8 +102,16 @@ null;
                         backgroundColor: Colors.red,
                       ));}
                     if(data.length > 0){
+                      String userId = "";
                       final prefs = await SharedPreferences.getInstance();
                       await prefs.setInt('userID', data[0]['id']);
+                      await OneSignal.shared.getDeviceState().then((deviceState) {
+                          userId = deviceState!.userId.toString(); // Use this ID to identify the user
+                      });
+                      await supabase.from('users').upsert({
+                        'id': data[0]['id'],
+                        'onesignaluserid': userId
+                      });
                       // ignore: use_build_context_synchronously
                       Navigator.pushNamed(context, '/userhome');
                     }
