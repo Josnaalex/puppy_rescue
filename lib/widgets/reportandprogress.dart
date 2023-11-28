@@ -6,11 +6,11 @@ import 'package:image_picker/image_picker.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class LocationAndImageForm extends StatefulWidget {
-  const LocationAndImageForm({Key? key}) : super(key: key);
+class ReportAndProgress extends StatefulWidget {
+  const ReportAndProgress({Key? key}) : super(key: key);
 
   @override
-  State<LocationAndImageForm> createState() => _LocationAndImageFormState();
+  State<ReportAndProgress> createState() => _ReportAndProgressState();
 }
 
 class AnimalShelterItem {
@@ -20,7 +20,7 @@ class AnimalShelterItem {
   AnimalShelterItem({required this.id, required this.name});
 }
 
-class _LocationAndImageFormState extends State<LocationAndImageForm> {
+class _ReportAndProgressState extends State<ReportAndProgress> {
   List<String> animalShelters = [];
 
   String? _loc = '';
@@ -110,6 +110,51 @@ class _LocationAndImageFormState extends State<LocationAndImageForm> {
   //     print('Error getting location: $e');
   //   }
   // }
+  void _showBottomSheet() {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              title: Text('Pick Image from Camera'),
+              onTap: () async {
+                final pickedImage = await ImagePicker().pickImage(source: ImageSource.camera);
+                
+                  if (pickedImage != null) {
+                    final imagePath = pickedImage.path;
+                    imageFile = File(imagePath);
+                  }
+                    setState(() {
+                    _image = pickedImage;
+                  
+                });
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              title: Text('Pick Image from Gallery'),
+              onTap: () async {
+                final pickedImage = await ImagePicker().pickImage(source: ImageSource.gallery);
+                
+                  if (pickedImage != null) {
+                    final imagePath = pickedImage.path;
+                    imageFile = File(imagePath);
+                  }
+                  setState(() {
+                     _image = pickedImage;
+                  });
+                  Navigator.pop(context);
+              },
+              
+                  
+                ),
+          ]
+        );
+      }
+    );
+  }
 
   Future<void> insertReport() async {
     print(shelterIds[_selectedShelter]);
@@ -154,7 +199,7 @@ class _LocationAndImageFormState extends State<LocationAndImageForm> {
                   ),
                 SizedBox(height: 20),
                 ElevatedButton.icon(
-                  onPressed: _pickImage,
+                  onPressed: _showBottomSheet,
                   icon: Icon(Icons.camera_alt),
                   label: Text('Take Image'),
                 ),

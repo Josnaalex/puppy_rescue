@@ -21,38 +21,89 @@ class _AddPuppyState extends State<AddPuppy> {
   final _shelternameController = TextEditingController();
   final _shelterlocationController = TextEditingController();
   final _imagePicker = ImagePicker();
-   dynamic userId;
+  dynamic userId;
   bool isLoading = false;
   final supabase = Supabase.instance.client;
 
 
     dynamic imageFile;
       XFile? _image;
+  @override
   void initState() {
     super.initState();
     getUserId();
   }
-
-  Future<void> _pickImage() async {
-    final pickedImage =
-        await _imagePicker.pickImage(source: ImageSource.camera);
-    if (pickedImage != null) {
-        final imagePath = pickedImage.path;
-        imageFile = File(imagePath);
-
-      //   final supabase = Supabase.instance.client;
-      //   final String weblink = await supabase.storage.from('stray').upload(
-      //   'puppy/puppy1.jpg',
-      //   imageFile,
-      //   fileOptions: const FileOptions(cacheControl: '3600', upsert: false),
-      // );
-
-      //   print(weblink);
-      setState(() {
-        _image = pickedImage;
-      });
-    }
+  void _showBottomSheet() {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              title: Text('Pick Image from Camera'),
+              onTap: () async {
+                final pickedImage = await ImagePicker().pickImage(source: ImageSource.camera);
+                
+                  if (pickedImage != null) {
+                    final imagePath = pickedImage.path;
+                    imageFile = File(imagePath);
+                  }
+                    setState(() {
+                    _image = pickedImage;
+                  
+                });
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              title: Text('Pick Image from Gallery'),
+              onTap: () async {
+                final pickedImage = await ImagePicker().pickImage(source: ImageSource.gallery);
+                
+                  if (pickedImage != null) {
+                    final imagePath = pickedImage.path;
+                    imageFile = File(imagePath);
+                  }
+                  setState(() {
+                     _image = pickedImage;
+                  });
+                  Navigator.pop(context);
+              },
+              
+                  
+                ),
+          ]
+        );
+      }
+    );
   }
+                
+              
+      
+    
+  
+
+  // Future<void> _pickImage() async {
+  //   final pickedImage =
+  //       await _imagePicker.pickImage(source: ImageSource.camera);
+  //   if (pickedImage != null) {
+  //       final imagePath = pickedImage.path;
+  //       imageFile = File(imagePath);
+
+  //     //   final supabase = Supabase.instance.client;
+  //     //   final String weblink = await supabase.storage.from('stray').upload(
+  //     //   'puppy/puppy1.jpg',
+  //     //   imageFile,
+  //     //   fileOptions: const FileOptions(cacheControl: '3600', upsert: false),
+  //     // );
+
+  //     //   print(weblink);
+  //     setState(() {
+  //       _image = pickedImage;
+  //     });
+  //   }
+  // }
   Future<void> insertPuppy() async {
 
     final supabase = Supabase.instance.client;
@@ -93,7 +144,7 @@ class _AddPuppyState extends State<AddPuppy> {
                   ),
                 SizedBox(height: 20),
                 ElevatedButton.icon(
-                  onPressed: _pickImage,
+                  onPressed: _showBottomSheet,
                   icon: Icon(Icons.camera_alt),
                   label: Text('Take Image'),
                 ),
@@ -166,6 +217,10 @@ null;
                   // if (_formKey.currentState!.validate()) {
                     insertPuppy();
                   // }
+                  SnackBar snackBar = SnackBar(
+        content: Text('Puppy details added successfully!'),
+      );
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
                 },
                 child: Text('Add puppy'),
               ),

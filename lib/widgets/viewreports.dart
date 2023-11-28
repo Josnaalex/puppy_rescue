@@ -66,6 +66,7 @@ class _ViewReportsState extends State<ViewReports> {
                             trailing: ElevatedButton(onPressed:() {
                                   Navigator.pushNamed(context, '/viewpuppy',arguments: {
                                     'reportId':reportList[index]['id'],
+                                    'user' :reportList[index]['user_id'],
                                   });
 
                             }, child: Text('View'))
@@ -88,8 +89,9 @@ class _ViewReportsState extends State<ViewReports> {
     final userId = prefs.getInt('userID');
     reportList = await Supabase.instance.client
       .from('reports')
-      .select('id,location, landmark')
+      .select()
       .match({'shelter_id' : userId});
+      print(reportList);
     setState(() {
       isLoading = false;
     });

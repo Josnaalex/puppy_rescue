@@ -22,12 +22,41 @@ class _AdoptionRequestsState extends State<AdoptionRequests> {
   dynamic userAddress;
   dynamic puppyBreed;
   dynamic puppyAge;
+  bool acceptClicked = false;
+  bool declineClicked = false;
   @override
   void initState() {
     super.initState();
     getUserId();
   }
+  void acceptRequest() async{
+    setState(() {
+      acceptClicked = true;
+    });
+    final response = await supabase
+          .from('adoption_requests')
+          .update({'status': 'accepted'})
+          .match({'id':requestList[0]['id']});
+    // await supabase
+    //     .from('adoption')
+    //     .delete()
+    //     .match({'id':adoptionId});
 
+    
+      print('Request Accepted');
+    
+    }
+  void declineRequest() async{
+    setState(() {
+      declineClicked = true;
+    });
+    final response = await supabase
+          .from('adoption_requests')
+          .update({'status': 'rejected'})
+          .match({'id':requestList[0]['id']});
+      print('Request declined');
+    
+  }
   //display details of requested user and adoptionId and add buttons confirm or reject,give corresponding msgs to the user when button pressed
 
   @override
@@ -96,7 +125,8 @@ class _AdoptionRequestsState extends State<AdoptionRequests> {
                                     child: Text('Accept'),
                                     onPressed: () {
                                       // Implement accept request logic
-                                      
+                                      acceptClicked ? null : acceptRequest();
+
                                     },
                                   ),
                                   SizedBox(width: 8.0), // Add some spacing between buttons
@@ -104,6 +134,7 @@ class _AdoptionRequestsState extends State<AdoptionRequests> {
                                     child: Text('Decline'),
                                     onPressed: () {
                                       // Implement decline request logic
+                                      declineClicked ? null : declineRequest();
                                     },
                                   ),
                                 ],
@@ -138,7 +169,8 @@ class _AdoptionRequestsState extends State<AdoptionRequests> {
     requestList = await supabase
         .from('adoption_requests')
         .select()
-        .match({'shelter_id': userId});
+        .match({'shelter_id': userId,})
+        .neq('stauts', 'accepted');
 
     print(requestList);
     if (requestList.length != 0) {

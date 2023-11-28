@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:newapp/widgets/report.dart';
+import 'package:newapp/widgets/reportandprogress.dart';
+import 'package:newapp/widgets/reportedpuppystatus.dart';
+import 'package:newapp/widgets/requeststatus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -18,7 +21,7 @@ class _UserHomeState extends State<UserHome> {
   bool isLoading = false;
   final supabase = Supabase.instance.client;
   // ignore: non_constant_identifier_names
-  final puppy_list = Supabase.instance.client.from('adoption').stream(primaryKey: ['id']).order('id');
+  final puppy_list = Supabase.instance.client.from('adoption').stream(primaryKey: ['id']).eq('status', false ).order('id');
 
   @override
   void initState() {
@@ -53,7 +56,7 @@ class _UserHomeState extends State<UserHome> {
             onTap: (){
               Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => LocationAndImageForm()),
+              MaterialPageRoute(builder: (context) => ReportAndProgress()),
   );
 
             },
@@ -63,6 +66,26 @@ class _UserHomeState extends State<UserHome> {
             onTap: (){
 
             }
+          ),
+           ListTile(
+            title: const Text('View Adoption Status'),
+            onTap: (){
+              Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => RequestStatus()),
+  );
+
+            },
+          ),
+          ListTile(
+            title: const Text('View Reported Puppy Status'),
+            onTap: (){
+              Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => ReportStatus()),
+  );
+
+            },
           ),
           ListTile(
             title: const Text("Sign Out"),
@@ -89,7 +112,7 @@ class _UserHomeState extends State<UserHome> {
                 builder: (context, AsyncSnapshot snapshot) {
                   if(snapshot.hasData){
                     final puppyList = snapshot.data;
-                    print(puppyList);
+                    // print(puppyList);
                     return ListView.builder(
                       itemCount: puppyList.length,
                       itemBuilder: (context,index){
