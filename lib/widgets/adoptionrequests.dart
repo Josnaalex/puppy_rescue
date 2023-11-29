@@ -35,33 +35,29 @@ class _AdoptionRequestsState extends State<AdoptionRequests> {
     getUserId();
   }
   void acceptRequest() async{
-    setState(() {
-      acceptClicked = true;
-      getUserId();
-    });
     final response = await supabase
           .from('adoption_requests')
           .update({'status': 'accepted'})
           .match({'id':requestList[0]['id']});
-    // await supabase
-    //     .from('adoption')
-    //     .delete()
-    //     .match({'id':adoptionId});
 
     
       print('Request Accepted');
+       setState(() {
+      acceptClicked = true;
+      getUserId();
+    });
     
     }
   void declineRequest() async{
-    setState(() {
-      declineClicked = true;
-      getUserId();
-    });
     final response = await supabase
           .from('adoption_requests')
           .update({'status': 'rejected'})
           .match({'id':requestList[0]['id']});
       print('Request declined');
+    setState(() {
+      declineClicked = true;
+      getUserId();
+    });
     
   }
   //display details of requested user and adoptionId and add buttons confirm or reject,give corresponding msgs to the user when button pressed
@@ -210,38 +206,32 @@ class _AdoptionRequestsState extends State<AdoptionRequests> {
     });
     final prefs = await SharedPreferences.getInstance();
     final userId = prefs.getInt('userID');
-    print(userId);
     requestList = await supabase
         .from('adoption_requests')
         .select()
         .match({'shelter_id': userId, 'status': 'pending'});
-
-    if (requestList.length != 0) {
-      for (var i = 0; i < requestList.length; i++) {
-        dynamic temp1;
-        dynamic temp2;
-
-        temp1 = await supabase
+    dynamic allAdoption;
+    dynamic allUsers;
+    allUsers = await supabase
           .from('users')
-          .select('name,address')
-          .match({'id': requestList[i]['user_id']});
-        temp2 = await supabase
+          .select('id,name,address');
+    allAdoption = await supabase
         .from('adoption')
-        .select('breed,age')
-        .match({'id': requestList[i]['adoption_id']});
+        .select('id,breed,age');
+    List<dynamic> requestedUserIds = requestList.map((request) => request['user_id'] as int).toList();
+    List<dynamic> requestedAdoptionIds = requestList.map((request) => request['adoption_id'] as int).toList();
 
-
-
-        
-        userDetails = userDetails + temp1;
-        puppyDetails = puppyDetails + temp2;
-
-      }
-      print(userDetails);
-      print(puppyDetails);
+   for (var userId in requestedUserIds) {
+      var users = allUsers.where((user) => user['id'] == userId);
+      userDetails.addAll(users);
     }
+     for (var adoptionId in requestedAdoptionIds) {
+      var adoptions = allAdoption.where((adoption) => adoption['id'] == adoptionId);
+      puppyDetails.addAll(adoptions);
+    }
+    
     setState(() {
         isLoading = false;
       });
-  }
+}
 }
