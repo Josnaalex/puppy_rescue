@@ -1,6 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
+
 
 final supabase = Supabase.instance.client;
 
@@ -16,8 +21,8 @@ class _AdoptionRequestsState extends State<AdoptionRequests> {
   bool isLoading = false;
   dynamic adoptionId;
   dynamic requestedUser;
-  dynamic userDetails;
-  dynamic puppyDetails;
+  dynamic puppyDetails = [];
+  dynamic userDetails = [];
   dynamic userName;
   dynamic userAddress;
   dynamic puppyBreed;
@@ -32,6 +37,7 @@ class _AdoptionRequestsState extends State<AdoptionRequests> {
   void acceptRequest() async{
     setState(() {
       acceptClicked = true;
+      getUserId();
     });
     final response = await supabase
           .from('adoption_requests')
@@ -49,6 +55,7 @@ class _AdoptionRequestsState extends State<AdoptionRequests> {
   void declineRequest() async{
     setState(() {
       declineClicked = true;
+      getUserId();
     });
     final response = await supabase
           .from('adoption_requests')
@@ -123,18 +130,32 @@ class _AdoptionRequestsState extends State<AdoptionRequests> {
                                 children: [
                                   ElevatedButton(
                                     child: Text('Accept'),
-                                    onPressed: () {
+                                    onPressed: () async{
                                       // Implement accept request logic
                                       acceptClicked ? null : acceptRequest();
+                                      final response = await supabase.from('users').select('onesignaluserid').match({
+                                        'id':requestList[0]['user_id']
+                                      });
+
+                                      const message = "Your adoption request has been accepted";
+
+                                      sendPushNotification(response[0]['onesignaluserid'], message);
 
                                     },
                                   ),
                                   SizedBox(width: 8.0), // Add some spacing between buttons
                                   ElevatedButton(
                                     child: Text('Decline'),
-                                    onPressed: () {
+                                    onPressed: () async{
                                       // Implement decline request logic
                                       declineClicked ? null : declineRequest();
+                                      final response = await supabase.from('users').select('onesignaluserid').match({
+                                        'id':requestList[0]['user_id']
+                                      });
+
+                                      const message = "Your adoption request has been rejected";
+
+                                      sendPushNotification(response[0]['onesignaluserid'], message);
                                     },
                                   ),
                                 ],
@@ -160,31 +181,64 @@ class _AdoptionRequestsState extends State<AdoptionRequests> {
     );
   }
 
+  Future sendPushNotification(String userId, String message) async {
+
+    await dotenv.load(fileName: ".env");
+
+    var headers = {
+      'Content-Type': 'application/json',
+      'Authorization': dotenv.env['URL']!,
+    };
+
+    var body = {
+      'app_id': dotenv.env['APP_ID']!,
+      'include_player_ids': [userId],
+      'contents': {'en': message},
+    };
+
+    await http.post(
+      Uri.parse("https://onesignal.com/api/v1/notifications"),
+      headers: headers,
+      body: jsonEncode(body),
+    );
+
+  }
+
   Future getUserId() async {
     setState(() {
       isLoading = true;
     });
     final prefs = await SharedPreferences.getInstance();
     final userId = prefs.getInt('userID');
+    print(userId);
     requestList = await supabase
         .from('adoption_requests')
         .select()
-        .match({'shelter_id': userId,})
-        .neq('status', 'accepted');
+        .match({'shelter_id': userId, 'status': 'pending'});
 
-    print(requestList);
     if (requestList.length != 0) {
-      adoptionId = requestList[0]['adoption_id'];
-      requestedUser = requestList[0]['user_id'];
-    
-      userDetails = await supabase
+      for (var i = 0; i < requestList.length; i++) {
+        dynamic temp1;
+        dynamic temp2;
+
+        temp1 = await supabase
           .from('users')
           .select('name,address')
-          .match({'id': requestedUser});
-      puppyDetails = await supabase
-          .from('adoption')
-          .select('breed,age')
-          .match({'id': adoptionId});
+          .match({'id': requestList[i]['user_id']});
+        temp2 = await supabase
+        .from('adoption')
+        .select('breed,age')
+        .match({'id': requestList[i]['adoption_id']});
+
+
+
+        
+        userDetails = userDetails + temp1;
+        puppyDetails = puppyDetails + temp2;
+
+      }
+      print(userDetails);
+      print(puppyDetails);
     }
     setState(() {
         isLoading = false;

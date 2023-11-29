@@ -117,9 +117,9 @@ null;
               SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () {
-                  // if (_formKey.currentState!.validate()) {
+                  if (_formKey.currentState!.validate()) {
                     createUser();
-                  // }
+                  }
                 },
                 child: Text('Create Account'),
               ),
