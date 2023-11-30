@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:newapp/widgets/admin_viewreports.dart';
+import 'package:newapp/widgets/adminhome.dart';
 import 'package:newapp/widgets/adopt.dart';
 import 'package:newapp/widgets/adoptionrequests.dart';
 import 'package:newapp/widgets/shelterhome.dart';
@@ -37,6 +39,8 @@ class MyApp extends StatelessWidget {
         '/shelterhome' : (context) => const ShelterHome(),
         '/viewpuppy' : (context) => const ViewPuppy(),
         '/adoptionrequests' : (context) => const AdoptionRequests(),
+        '/adminhome' : (context)=> const ShelterApproval(),
+        '/adminviewreports' :(context) => const AdminViewReports(),
       }
     );
   }

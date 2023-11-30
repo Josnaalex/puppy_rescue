@@ -17,7 +17,8 @@ class _CreateShelterAccountState extends State<CreateShelterAccount> {
 
   final _nameController = TextEditingController();
 
-  
+    final _licenseController = TextEditingController();
+
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _addressController = TextEditingController();
@@ -82,6 +83,19 @@ null;
                 return null;
                 },
               ),
+              SizedBox(height: 20),
+              TextFormField(
+                controller: _licenseController,
+                decoration: const InputDecoration(
+                  labelText: 'License number',
+                ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter your license no';
+                  }
+                return null;
+                },
+              ),
 
               SizedBox(height: 20),
               TextFormField(
@@ -117,9 +131,9 @@ null;
               SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () {
-                  if (_formKey.currentState!.validate()) {
+                  // if (_formKey.currentState!.validate()) {
                     createUser();
-                  }
+                  // }
                 },
                 child: Text('Create Account'),
               ),
@@ -136,14 +150,16 @@ null;
     final password = _passwordController.text;
     final address = _addressController.text;
     final phone = _phoneController.text;
+    final license =_licenseController.text;
 
 
-     await client.from('shelters').insert({
-      'name': name,
+     await client.from('pending_approval').insert({
+      'shelter_name': name,
       'email': email,
       'password': password,
       'location': address,
       'phone' : phone,
+      'license_no' :license,
 
     });
 

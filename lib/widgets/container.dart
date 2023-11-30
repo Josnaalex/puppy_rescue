@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:newapp/widgets/adminlogin.dart';
 import 'package:newapp/widgets/login.dart';
 import 'package:newapp/widgets/report.dart';
 import 'package:newapp/widgets/shelterlogin.dart';
@@ -61,6 +62,18 @@ class MyWidget extends StatelessWidget {
               context,
               MaterialPageRoute(builder: (context) => SignInShelter()),
     );
+    
+
+            },
+          ),
+          ListTile(
+            title: const Text("Sign In as Admin"),
+            onTap: (){
+              Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => SignInAdmin()),
+    );
+    
 
             },
           )
