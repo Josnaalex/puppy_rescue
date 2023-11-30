@@ -33,6 +33,7 @@ State<CreateAccountScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _addressController = TextEditingController();
+  bool error = false;
 
 
   @override
@@ -46,7 +47,7 @@ State<CreateAccountScreen> {
         child: Padding(
           padding: const EdgeInsets.all(20.0),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               TextFormField(
                 controller: _nameController,
@@ -79,6 +80,9 @@ null;
                   return null;
                 },
               ),
+              error? Text('This email id already exists', style: TextStyle(
+                color: Colors.red
+              ),):Text(''),
               SizedBox(height: 20),
               TextFormField(
                 controller: _addressController,
@@ -112,13 +116,15 @@ null;
                 },
               ),
               SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () {
-                  if (_formKey.currentState!.validate()) {
-                    createUser();
-                  }
-                },
-                child: Text('Create Account'),
+              Center(
+                child: ElevatedButton(
+                  onPressed: () {
+                    if (_formKey.currentState!.validate()) {
+                      createUser();
+                    }
+                  },
+                  child: Text('Create Account'),
+                ),
               ),
             ],
           ),
@@ -132,14 +138,22 @@ null;
     final email = _emailController.text;
     final password = _passwordController.text;
     final address = _addressController.text;
-
+    final response = await client.from('users').select('id').match({'email':email});
+    if(response.length > 0)
+    {
+      setState(() {
+        error = true;
+      });
+      
+    }
+    else{
 
      await client.from('users').insert({
       'name': name,
       'email': email,
       'password': password,
       'address': address,
-    });
+    });}
 
     // if (response.error != null) {
     //   print('Error creating account: ${response.error}');

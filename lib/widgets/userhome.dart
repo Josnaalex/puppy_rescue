@@ -133,7 +133,7 @@ class _UserHomeState extends State<UserHome> {
                               children: [
                                 Text('Age: ${puppyList[index]['age']}'),
 
-                                Text('At Shelter: ${puppyList[index]['shelter_name']}'),
+                                Text('At: ${puppyList[index]['shelter_name']}'),
                                 Text('Location: ${puppyList[index]['shelter_location']}')
                               ],
                             ),

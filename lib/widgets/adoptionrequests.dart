@@ -29,6 +29,7 @@ class _AdoptionRequestsState extends State<AdoptionRequests> {
   dynamic puppyAge;
   bool acceptClicked = false;
   bool declineClicked = false;
+  dynamic allAdoption;
   @override
   void initState() {
     super.initState();
@@ -136,6 +137,7 @@ class _AdoptionRequestsState extends State<AdoptionRequests> {
                                       const message = "Your adoption request has been accepted";
 
                                       sendPushNotification(response[0]['onesignaluserid'], message);
+                                      await supabase.from('adoption').update({'status':'true'}).match({'id':puppyDetails[index]['id']});
 
                                     },
                                   ),
@@ -210,7 +212,7 @@ class _AdoptionRequestsState extends State<AdoptionRequests> {
         .from('adoption_requests')
         .select()
         .match({'shelter_id': userId, 'status': 'pending'});
-    dynamic allAdoption;
+    
     dynamic allUsers;
     allUsers = await supabase
           .from('users')
