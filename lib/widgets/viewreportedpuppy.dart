@@ -42,17 +42,10 @@ class _ViewPuppyState extends State<ViewPuppy> {
     setState(() {
       foundClicked = true;
     });
-    final response = await supabase
+  await supabase
           .from('reports')
           .update({'status': 'Puppy is safe'})
-          .match({'user_id': user, 'id':reportDetails!['reportId']});
-    
-    // await supabase
-    //     .from('adoption')
-    //     .delete()
-    //     .match({'id':adoptionId});
-      print('Puppy Found');
-      print(reportDetails['user']);
+          .match({'user_id': reportDetails['user'], 'id':reportDetails!['reportId']});
 
     
     }

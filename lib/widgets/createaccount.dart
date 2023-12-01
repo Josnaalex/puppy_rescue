@@ -3,38 +3,25 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 final client = Supabase.instance.client;
 
-class
- 
-CreateAccountScreen
- 
-extends
- 
-StatefulWidget
- 
-{
+class CreateAccountScreen extends StatefulWidget {
   const CreateAccountScreen({Key? key}) : super(key: key);
 
   @override
   State<CreateAccountScreen> createState() => _CreateAccountScreenState();
 }
 
-class
- 
-_CreateAccountScreenState
- 
-extends
- 
-State<CreateAccountScreen> {
+class _CreateAccountScreenState extends State<CreateAccountScreen> {
   final _formKey = GlobalKey<FormState>();
 
   final _nameController = TextEditingController();
 
-  
+  final _confirmPasswordController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _addressController = TextEditingController();
-  bool error = false;
+    final _phoneController = TextEditingController();
 
+  bool error = false;
 
   @override
   Widget build(BuildContext context) {
@@ -51,18 +38,27 @@ State<CreateAccountScreen> {
             children: [
               TextFormField(
                 controller: _nameController,
-                decoration:
- 
-const InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Full Name',
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Please enter your full name';
                   }
-                  return
- 
-null;
+                  return null;
+                },
+              ),
+              SizedBox(height: 20),
+              TextFormField(
+                controller: _phoneController,
+                decoration: const InputDecoration(
+                  labelText: 'Phone',
+                ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter your phone number';
+                  }
+                  return null;
                 },
               ),
               SizedBox(height: 20),
@@ -73,16 +69,21 @@ null;
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return
- 
-'Please enter your email address';
+                    return 'Please enter your email address';
+                  }
+                  final regex = RegExp(r'\w+@\w+\.\w+');
+                  if (!regex.hasMatch(value)) {
+                    return 'Please enter a valid email address';
                   }
                   return null;
                 },
               ),
-              error? Text('This email id already exists', style: TextStyle(
-                color: Colors.red
-              ),):Text(''),
+              error
+                  ? Text(
+                      'This email id already exists',
+                      style: TextStyle(color: Colors.red),
+                    )
+                  : Text(''),
               SizedBox(height: 20),
               TextFormField(
                 controller: _addressController,
@@ -93,10 +94,10 @@ null;
                   if (value == null || value.isEmpty) {
                     return 'Please enter your address';
                   }
-                return null;
+
+                  return null;
                 },
               ),
-
               SizedBox(height: 20),
               TextFormField(
                 controller: _passwordController,
@@ -106,13 +107,28 @@ null;
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return
- 
-'Please enter your password';
+                    return 'Please enter your password';
                   }
-                  return
- 
-null;
+                  if (value.length < 6) {
+                    return 'Password must be at least 6 characters long';
+                  }
+                  return null;
+                },
+              ),
+              TextFormField(
+                controller: _confirmPasswordController,
+                obscureText: true,
+                decoration: const InputDecoration(
+                  labelText: 'Confirm Password',
+                ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please confirm your password';
+                  }
+                  if (value != _passwordController.text) {
+                    return 'Passwords do not match';
+                  }
+                  return null;
                 },
               ),
               SizedBox(height: 20),
@@ -121,6 +137,7 @@ null;
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
                       createUser();
+                      Navigator.pop(context);
                     }
                   },
                   child: Text('Create Account'),
@@ -138,22 +155,23 @@ null;
     final email = _emailController.text;
     final password = _passwordController.text;
     final address = _addressController.text;
-    final response = await client.from('users').select('id').match({'email':email});
-    if(response.length > 0)
-    {
+    final phone = _phoneController.text;
+
+    final response =
+        await client.from('users').select('id').match({'email': email});
+    if (response.length > 0) {
       setState(() {
         error = true;
       });
-      
+    } else {
+      await client.from('users').insert({
+        'name': name,
+        'email': email,
+        'password': password,
+        'address': address,
+        'phone' : phone,
+      });
     }
-    else{
-
-     await client.from('users').insert({
-      'name': name,
-      'email': email,
-      'password': password,
-      'address': address,
-    });}
 
     // if (response.error != null) {
     //   print('Error creating account: ${response.error}');

@@ -110,15 +110,15 @@ class _AdoptionRequestsState extends State<AdoptionRequests> {
                                       ),
                                       child: ListTile(
                             title: Text(
-                              userName,
+                             'Username: ${userName}',
                               style: TextStyle(fontWeight: FontWeight.bold),
                             ),
                             subtitle: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(userAddress),
-                                Text(puppyBreed),
-                                Text(puppyAge),
+                                Text('Address: ${userAddress}'),
+                                Text('Puppy Breed: ${puppyBreed}'),
+                                Text('Puppy Age: ${puppyAge}'),
                                 // Text('Location: ${reportList?[index]['shelter_location']}')
                               ],
                             ),
@@ -212,6 +212,8 @@ class _AdoptionRequestsState extends State<AdoptionRequests> {
         .from('adoption_requests')
         .select()
         .match({'shelter_id': userId, 'status': 'pending'});
+
+      print(requestList);
     
     dynamic allUsers;
     allUsers = await supabase

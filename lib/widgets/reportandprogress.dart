@@ -199,10 +199,10 @@ class _ReportAndProgressState extends State<ReportAndProgress> {
           imageFile,
           fileOptions: const FileOptions(cacheControl: '3600', upsert: false),
         );
-    final prefs = await SharedPreferences.getInstance();
-    final userID = prefs.getInt('userID');
+    // final prefs = await SharedPreferences.getInstance();
+    // final userID = prefs.getInt('userID');
     final shelter = await supabase.from('shelters').select('onesignaluserid').match({
-      'id':userID
+      'id':report['shelter_id']
     });
     final message = "A new puppy is reported at ${_locController.text}.";
 

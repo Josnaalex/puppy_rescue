@@ -23,6 +23,7 @@ class _CreateShelterAccountState extends State<CreateShelterAccount> {
   final _passwordController = TextEditingController();
   final _addressController = TextEditingController();
   final _phoneController = TextEditingController();
+  bool error = false;
 
 
 
@@ -37,7 +38,7 @@ class _CreateShelterAccountState extends State<CreateShelterAccount> {
         child: Padding(
           padding: const EdgeInsets.all(20.0),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               TextFormField(
                 controller: _nameController,
@@ -67,9 +68,16 @@ null;
  
 'Please enter your email address';
                   }
+                  final regex = RegExp(r'\w+@\w+\.\w+');
+                  if (!regex.hasMatch(value)) {
+                    return 'Please enter a valid email address';
+                  }
                   return null;
                 },
               ),
+              error? Text('This email id already exists',style: TextStyle(
+                color: Colors.red
+              ),):Text(''),
               SizedBox(height: 20),
               TextFormField(
                 controller: _addressController,
@@ -110,6 +118,7 @@ null;
  
 'Please enter your password';
                   }
+                  
                   return
  
 null;
@@ -129,7 +138,8 @@ null;
                 },
               ),
               SizedBox(height: 20),
-              ElevatedButton(
+              Center(
+              child:ElevatedButton(
                 onPressed: () {
                   // if (_formKey.currentState!.validate()) {
                     createUser();
@@ -137,6 +147,7 @@ null;
                 },
                 child: Text('Create Account'),
               ),
+              )
             ],
           ),
         ),
@@ -151,8 +162,14 @@ null;
     final address = _addressController.text;
     final phone = _phoneController.text;
     final license =_licenseController.text;
-
-
+    final response = await client.from('shelters').select('id').match({'email':email});
+    if(response.length > 0)
+    {
+      setState(() {
+        error=true;
+      });
+    }
+    else{
      await client.from('pending_approval').insert({
       'shelter_name': name,
       'email': email,
@@ -161,7 +178,7 @@ null;
       'phone' : phone,
       'license_no' :license,
 
-    });
+    });}
 
     // if (response.error != null) {
     //   print('Error creating account: ${response.error}');

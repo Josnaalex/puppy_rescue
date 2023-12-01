@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:newapp/widgets/admin_viewpuppy.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 final client = Supabase.instance.client;
 class ShelterApproval extends StatefulWidget {
   const ShelterApproval({super.key});
@@ -10,6 +11,13 @@ class ShelterApproval extends StatefulWidget {
 }
 
 class _ShelterApprovalState extends State<ShelterApproval> {
+  dynamic userId;
+  bool isLoading = false;
+  @override
+  void initState() {
+    super.initState();
+    getUserId();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -48,6 +56,17 @@ class _ShelterApprovalState extends State<ShelterApproval> {
                       MaterialPageRoute(builder: (context) => AdminViewPuppy()),
                     );
                   }),
+                  ListTile(
+            title: const Text("Sign Out"),
+            onTap : ()async{
+            final prefs = await SharedPreferences.getInstance();
+
+              await prefs.remove('userID');
+
+                // ignore: use_build_context_synchronously
+                Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
+            }
+          )
             ],
           ),
         ),
@@ -138,5 +157,15 @@ class _ShelterApprovalState extends State<ShelterApproval> {
 ),
 
     );
+  }
+  Future getUserId() async {
+    setState(() {
+      isLoading = true;
+    });
+    final prefs = await SharedPreferences.getInstance();
+    userId = prefs.getInt('userID');
+    setState(() {
+      isLoading = false;
+    });
   }
   }

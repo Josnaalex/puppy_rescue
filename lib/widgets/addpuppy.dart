@@ -216,6 +216,7 @@ null;
                 onPressed: () {
                   // if (_formKey.currentState!.validate()) {
                     insertPuppy();
+                    Navigator.pop(context);
                   // }
                   SnackBar snackBar = SnackBar(
         content: Text('Puppy details added successfully!'),

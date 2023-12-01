@@ -35,16 +35,16 @@ class MyWidget extends StatelessWidget {
           //   ),
           //   child: Text('Menu'),
           // ),
-          ListTile(
-            title: const Text('Report'),
-            onTap: (){
-              Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => LocationAndImageForm()),
-  );
+  //         ListTile(
+  //           title: const Text('Report'),
+  //           onTap: (){
+  //             Navigator.push(
+  //             context,
+  //             MaterialPageRoute(builder: (context) => LocationAndImageForm()),
+  // );
 
-            },
-          ),
+  //           },
+  //         ),
           ListTile(
             title: const Text("Sign In as User"),
             onTap: (){

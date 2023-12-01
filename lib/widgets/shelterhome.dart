@@ -55,7 +55,16 @@ class _ShelterHomeState extends State<ShelterHome> {
               ListTile(title: const Text("Adoption Requests"), onTap: () {
                 Navigator.pushNamed(context, '/adoptionrequests');
               }),
+              
               ListTile(
+                  title: const Text("Add Puppy"),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => AddPuppy()),
+                    );
+                  }),
+                  ListTile(
                   title: const Text("Sign Out"),
                   onTap: () async {
                     final prefs = await SharedPreferences.getInstance();
@@ -65,14 +74,6 @@ class _ShelterHomeState extends State<ShelterHome> {
                     // ignore: use_build_context_synchronously
                     Navigator.pushNamedAndRemoveUntil(
                         context, '/', (route) => false);
-                  }),
-              ListTile(
-                  title: const Text("Add Puppy"),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => AddPuppy()),
-                    );
                   }),
             ],
           ),

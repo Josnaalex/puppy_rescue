@@ -3,6 +3,7 @@ import 'package:newapp/widgets/report.dart';
 import 'package:newapp/widgets/reportandprogress.dart';
 import 'package:newapp/widgets/reportedpuppystatus.dart';
 import 'package:newapp/widgets/requeststatus.dart';
+import 'package:newapp/widgets/user_profile.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -83,6 +84,16 @@ class _UserHomeState extends State<UserHome> {
               Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => ReportStatus()),
+  );
+
+            },
+          ),
+          ListTile(
+            title: const Text('Profile'),
+            onTap: (){
+              Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => UserProfile()),
   );
 
             },

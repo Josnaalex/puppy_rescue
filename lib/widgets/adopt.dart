@@ -50,6 +50,7 @@ class _AdoptPuppyState extends State<AdoptPuppy> {
           ),
           ElevatedButton(onPressed: () {
             request();
+            Navigator.pop(context);
           } ,
            child: Text('Request for Adoption'))
         ],
