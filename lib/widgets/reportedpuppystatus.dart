@@ -70,7 +70,10 @@ class _ReportStatusState extends State<ReportStatus> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text('Puppy spotted at : $location'),
-                                Text(status),
+                                Text('Status : $status',
+                                style: TextStyle(
+                                      color: status == 'Puppy is safe' ? Colors.green : Colors.red,
+                                    ),),
                                 // Text('Location: ${reportList?[index]['shelter_location']}')
                               ],
                             ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:newapp/widgets/addpuppy.dart';
+import 'package:newapp/widgets/shelter_profile.dart';
 import 'package:newapp/widgets/viewreports.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -62,6 +63,14 @@ class _ShelterHomeState extends State<ShelterHome> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) => AddPuppy()),
+                    );
+                  }),
+                  ListTile(
+                  title: const Text("Profile"),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => ShelterProfile()),
                     );
                   }),
                   ListTile(

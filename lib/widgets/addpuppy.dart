@@ -5,7 +5,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-
+final supabase = Supabase.instance.client;
 
 class AddPuppy extends StatefulWidget {
   const AddPuppy({Key? key}) : super(key: key);
@@ -23,8 +23,7 @@ class _AddPuppyState extends State<AddPuppy> {
   final _imagePicker = ImagePicker();
   dynamic userId;
   bool isLoading = false;
-  final supabase = Supabase.instance.client;
-
+  dynamic response;
 
     dynamic imageFile;
       XFile? _image;
@@ -106,12 +105,12 @@ class _AddPuppyState extends State<AddPuppy> {
   // }
   Future<void> insertPuppy() async {
 
-    final supabase = Supabase.instance.client;
+    
     final adopt = {
       'breed': _breedController.text,
       'age': _ageController.text,
-      'shelter_name': _shelternameController.text,
-      'shelter_location': _shelterlocationController.text,
+      'shelter_name': response[0]['name'],
+      'shelter_location': response[0]['location'],
       'shelter_id': userId,
   
     };
@@ -181,37 +180,7 @@ null;
                 },
               ),
               SizedBox(height: 20),
-              TextFormField(
-                controller: _shelternameController,
-                decoration: const InputDecoration(
-                  labelText: 'Shelter name',
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter Shelter name';
-                  }
-                return null;
-                },
-              ),
-
-              SizedBox(height: 20),
-              TextFormField(
-                controller: _shelterlocationController,
-                decoration: const InputDecoration(
-                  labelText: 'Shelter location',
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return
- 
-'Please enter shelter location';
-                  }
-                  return
- 
-null;
-                },
-              ),
-              SizedBox(height: 20),
+              
               ElevatedButton(
                 onPressed: () {
                   // if (_formKey.currentState!.validate()) {
@@ -237,6 +206,7 @@ null;
     });
     final prefs = await SharedPreferences.getInstance();
     userId = prefs.getInt('userID');
+   response =await supabase.from('shelters').select().match({'id':userId});
     setState(() {
       isLoading = false;
     });

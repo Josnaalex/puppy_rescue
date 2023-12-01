@@ -50,15 +50,15 @@ class _AdminViewReportsState extends State<AdminViewReports> {
                           ),
                           child: ListTile(
                             title: Text(
-                              location,
+                              'Location: $location',
                               style: TextStyle(fontWeight: FontWeight.bold),
                             ),
                             subtitle: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(location),
+                                Text('Location: $location'),
 
-                                Text(landmark),
+                                Text('Landmark: $landmark'),
                                 // Text('Location: ${reportList?[index]['shelter_location']}')
                               ],
                             ),

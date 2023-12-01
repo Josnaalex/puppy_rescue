@@ -46,7 +46,7 @@ class _AdminViewPuppyState extends State<AdminViewPuppy> {
                           ),
                           child: ListTile(
                             title: Text(
-                              puppyList[index]['breed'],
+                              'Breed: ${puppyList[index]['breed']}',
                               style: TextStyle(fontWeight: FontWeight.bold),
                             ),
                             subtitle: Column(
@@ -64,7 +64,7 @@ class _AdminViewPuppyState extends State<AdminViewPuppy> {
                                     'shelterId' :puppyList[index]['shelter_id']
                                   });
 
-                            }, child: Text('Adopt'))
+                            }, child: Text('Puppy Image'))
                           ),
                         );
                       }

@@ -34,7 +34,7 @@ class _UserHomeState extends State<UserHome> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Puppy Rescue"),
+        title: Text("Adopt your Puppy"),
         centerTitle: true,
         backgroundColor: Colors.brown,
       ),
@@ -65,7 +65,10 @@ class _UserHomeState extends State<UserHome> {
           ListTile(
             title: const Text("Adopt"),
             onTap: (){
-
+                Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) =>UserHome()),
+  );
             }
           ),
            ListTile(
@@ -136,7 +139,7 @@ class _UserHomeState extends State<UserHome> {
                           ),
                           child: ListTile(
                             title: Text(
-                              puppyList[index]['breed'],
+                              'Breed: ${puppyList[index]['breed']}',
                               style: TextStyle(fontWeight: FontWeight.bold),
                             ),
                             subtitle: Column(
@@ -168,9 +171,7 @@ class _UserHomeState extends State<UserHome> {
 
         ),
         )
-      // Center(
-      //   child: isLoading? Text(''):Text(userId.toString()),
-      // ),
+      
     );
   }
 
@@ -186,38 +187,3 @@ class _UserHomeState extends State<UserHome> {
     });
   }
 }
-// class CardExample extends StatelessWidget {
-//   const CardExample({super.key});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Center(
-//       child: Card(
-//         child: Column(
-//           mainAxisSize: MainAxisSize.min,
-//           children: <Widget>[
-//             const ListTile(
-//               leading: Icon(Icons.album),
-//               title: Text('Puppy 1'),
-//               subtitle: Text('At Animal Shelter'),
-//             ),
-            
-//             Row(
-//               mainAxisAlignment: MainAxisAlignment.end,
-//               children: <Widget>[
-//                 TextButton(
-//                   child: const Text('ADOPT'),
-//                   onPressed: () {/* ... */},
-//                 ),
-//                 const SizedBox(width: 8),
-                
-                
-                
-//               ],
-//             ),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }

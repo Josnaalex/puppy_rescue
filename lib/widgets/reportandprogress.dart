@@ -215,6 +215,8 @@ class _ReportAndProgressState extends State<ReportAndProgress> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Report the spotted Puppy'),
+        centerTitle: true,
+        backgroundColor: Colors.brown,
       ),
       body: SingleChildScrollView(
         child: Form(

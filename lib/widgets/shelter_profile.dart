@@ -2,16 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 final supabase = Supabase.instance.client;
-class UserProfile extends StatefulWidget {
-  const UserProfile({super.key});
+class ShelterProfile extends StatefulWidget {
+  const ShelterProfile({super.key});
 
   @override
-  State<UserProfile> createState() => _UserProfileState();
+  State<ShelterProfile> createState() => _UserProfileState();
 }
 
-class _UserProfileState extends State<UserProfile> {
+class _UserProfileState extends State<ShelterProfile> {
   bool isLoading = false;
-  dynamic requestList = [{"name": "", "email": "", "address": "","phone":""}];
+  dynamic requestList = [{"name": "", "email": "", "address": "","phone":"","location":""}];
   @override
   void initState() {
     super.initState();
@@ -21,14 +21,14 @@ class _UserProfileState extends State<UserProfile> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('User Profile'),
+        title: Text('Shelter Profile'),
       ),
       body: Column(
         children: [
           // Display the user's avatar
           CircleAvatar(
             radius: 50,
-            backgroundImage: NetworkImage('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSQCX5_wYEa6hyWoqSBOaPbaHw5Ff8Ljp0WcA&usqp=CAU'),
+            backgroundImage: NetworkImage('https://www.shareicon.net/data/512x512/2016/05/24/770137_man_512x512.png'),
           ),
           SizedBox(height: 20),
 
@@ -53,7 +53,7 @@ class _UserProfileState extends State<UserProfile> {
           ListTile(
             leading: Icon(Icons.home),
             title: Text('Address'),
-            subtitle: Text(requestList![0]['address']),
+            subtitle: Text(requestList![0]['location']),
           ),
           ListTile(
             leading: Icon(Icons.phone),
@@ -71,10 +71,9 @@ class _UserProfileState extends State<UserProfile> {
     final prefs = await SharedPreferences.getInstance();
     final userId = prefs.getInt('userID');
     requestList = await supabase
-        .from('users')
+        .from('shelters')
         .select()
         .match({'id': userId});
-      print(requestList);
     setState(() {
       isLoading = false;
     });

@@ -67,14 +67,17 @@ class _RequestStatusState extends State<RequestStatus> {
                                       ),
                                       child: ListTile(
                             title: Text(
-                              puppyBreed,
+                              'Puppy Breed: $puppyBreed',
                               style: TextStyle(fontWeight: FontWeight.bold),
                             ),
                             subtitle: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(puppyAge),
-                                Text(status),
+                                Text('Puppy Age: $puppyAge'),
+                                Text('Status: $status',
+                                style: TextStyle(
+    color: status == 'accepted' ? Colors.green : Colors.red,
+  ),),
                                 // Text('Location: ${reportList?[index]['shelter_location']}')
                               ],
                             ),

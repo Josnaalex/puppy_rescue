@@ -4,14 +4,14 @@ import 'package:shared_preferences/shared_preferences.dart';
   final client = Supabase.instance.client;
 
 
-class AdoptPuppy extends StatefulWidget {
-  const AdoptPuppy({super.key});
+class AdminViewImage extends StatefulWidget {
+  const AdminViewImage({super.key});
 
   @override
-  State<AdoptPuppy> createState() => _AdoptPuppyState();
+  State<AdminViewImage> createState() => _AdminViewImageState();
 }
 
-class _AdoptPuppyState extends State<AdoptPuppy> {
+class _AdminViewImageState extends State<AdminViewImage> {
   String _imageURL = '';
    dynamic userId;
   bool isLoading = false;
@@ -49,11 +49,7 @@ class _AdoptPuppyState extends State<AdoptPuppy> {
                 : CircularProgressIndicator(),  
           ),
           SizedBox(height: 20),
-          ElevatedButton(onPressed: () {
-            request();
-            Navigator.pop(context);
-          } ,
-           child: Text('Request for Adoption'))
+          
         ],
       ),
     );
