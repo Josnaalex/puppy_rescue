@@ -98,9 +98,10 @@ null;
                         content: Text('Invalid email or password'),
                         backgroundColor: Colors.red,
                       ));}
-                    
+                    else{
                       // ignore: use_build_context_synchronously
                       Navigator.pushNamed(context, '/adminhome');
+                    }
                    
                   }
 

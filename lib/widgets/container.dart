@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:newapp/widgets/adminlogin.dart';
 import 'package:newapp/widgets/login.dart';
-import 'package:newapp/widgets/report.dart';
 import 'package:newapp/widgets/shelterlogin.dart';
 
 class MyWidget extends StatelessWidget {
@@ -29,22 +28,7 @@ class MyWidget extends StatelessWidget {
                 )
             ),
             ),
-          // const DrawerHeader(
-          //   decoration: BoxDecoration(
-          //     color: Colors.brown,
-          //   ),
-          //   child: Text('Menu'),
-          // ),
-  //         ListTile(
-  //           title: const Text('Report'),
-  //           onTap: (){
-  //             Navigator.push(
-  //             context,
-  //             MaterialPageRoute(builder: (context) => LocationAndImageForm()),
-  // );
-
-  //           },
-  //         ),
+          
           ListTile(
             title: const Text("Sign In as User"),
             onTap: (){

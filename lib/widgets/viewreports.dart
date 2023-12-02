@@ -90,7 +90,7 @@ class _ViewReportsState extends State<ViewReports> {
     reportList = await Supabase.instance.client
       .from('reports')
       .select()
-      .match({'shelter_id' : userId});
+      .match({'shelter_id' : userId,'status':'pending'});
       print(reportList);
     setState(() {
       isLoading = false;

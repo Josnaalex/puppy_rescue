@@ -109,15 +109,15 @@ class _ShelterHomeState extends State<ShelterHome> {
                             ),
                             child: ListTile(
                                 title: Text(
-                                  location,
+                                  'Location: $location',
                                   style: TextStyle(fontWeight: FontWeight.bold),
                                 ),
                                 subtitle: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text(location),
+                                    // Text('Location: $location'),
 
-                                    Text(landmark),
+                                    Text('Landmark: $landmark'),
                                     // Text('Location: ${reportList?[index]['shelter_location']}')
                                   ],
                                 ),
@@ -126,6 +126,7 @@ class _ShelterHomeState extends State<ShelterHome> {
                                       Navigator.pushNamed(context, '/viewpuppy',
                                           arguments: {
                                             'reportId': reportList[index]['id'],
+                                            'user':reportList[index]['user_id']
                                           });
                                     },
                                     child: Text('View'))),
@@ -145,8 +146,8 @@ class _ShelterHomeState extends State<ShelterHome> {
     userId = prefs.getInt('userID');  
      reportList = await Supabase.instance.client
       .from('reports')
-      .select('id,location, landmark')
-      .match({'shelter_id' : userId});
+      .select('id,location, landmark,user_id')
+      .match({'shelter_id' : userId,'status':'pending'});
       print(reportList);
     setState(() {
       isLoading = false;

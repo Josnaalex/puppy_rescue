@@ -86,7 +86,7 @@ class _ShelterApprovalState extends State<ShelterApproval> {
           } else {
             var registrations =
                 snapshot.data as List; // Access the data property
-               if (registrations == null || registrations.isEmpty) {
+               if (registrations.isEmpty) {
           // No pending registrations
           return Center(
             child: Text('No pending registrations',style: TextStyle(
@@ -133,14 +133,12 @@ class _ShelterApprovalState extends State<ShelterApproval> {
                                   .from('pending_approval')
                                   .delete()
                                   .eq('id', registrationId)
-                                  .execute()
                                   .then((_) {
                                 setState(() {
                                   registrations.removeAt(
                                       index); // Remove the item from the list
                                 });
                               }).catchError((error) {
-                                print('Error approving registration: $error');
                                 // Handle error scenario
                               });
                             });
@@ -160,7 +158,6 @@ class _ShelterApprovalState extends State<ShelterApproval> {
                                 .from('pending_approval')
                                 .delete()
                                 .eq('id', registrationId)
-                                .execute()
                                 .then((_) {
                               setState(() {
                                 registrations.removeAt(
