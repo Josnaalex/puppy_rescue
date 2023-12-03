@@ -35,8 +35,8 @@ class _AdoptPuppyState extends State<AdoptPuppy> {
     });
     
   }
-  
-    Widget build(BuildContext context) {
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('Puppy Image'),
@@ -51,7 +51,15 @@ class _AdoptPuppyState extends State<AdoptPuppy> {
           SizedBox(height: 20),
           ElevatedButton(onPressed: () {
             request();
-            Navigator.pop(context);
+             ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('Request submitted successfully'),
+                          duration: Duration(seconds: 2),
+                        ),
+                      );
+                       Future.delayed(Duration(seconds: 2), () {
+                       Navigator.pop(context);
+                      });
           } ,
            child: Text('Request for Adoption'))
         ],

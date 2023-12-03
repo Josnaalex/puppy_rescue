@@ -12,6 +12,7 @@ class ViewPuppy extends StatefulWidget {
 
 class _ViewPuppyState extends State<ViewPuppy> {
   @override
+  // ignore: override_on_non_overriding_member
   String _imageURL = '';
    dynamic userId;
   bool isLoading = false;
@@ -24,7 +25,6 @@ class _ViewPuppyState extends State<ViewPuppy> {
     super.initState();
     Future.delayed(Duration.zero,(){
          reportDetails = ModalRoute.of(context)?.settings.arguments as Map?;
-         print(reportDetails);
       // Fetch image URL from Supabase storage
       final String publicUrl = supabase.storage
         .from('stray') // Replace with your bucket name
@@ -62,8 +62,18 @@ class _ViewPuppyState extends State<ViewPuppy> {
                 ? Image.network(_imageURL)
                 : CircularProgressIndicator(),  
           ),
+          SizedBox(height: 20),
           ElevatedButton(onPressed: () {
             foundClicked ? null : puppyStatus();
+             ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('Yeah! Puppy is safe'),
+                          duration: Duration(seconds: 2),
+                        ),
+                      );
+                       Future.delayed(Duration(seconds: 2), () {
+                       Navigator.pop(context);
+                      });
 
           } ,
            child: Text('Found'))

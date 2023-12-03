@@ -91,7 +91,6 @@ class _ViewReportsState extends State<ViewReports> {
       .from('reports')
       .select()
       .match({'shelter_id' : userId,'status':'pending'});
-      print(reportList);
     setState(() {
       isLoading = false;
     });

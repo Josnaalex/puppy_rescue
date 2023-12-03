@@ -82,7 +82,6 @@ class _AdminViewReportsState extends State<AdminViewReports> {
     reportList = await Supabase.instance.client
       .from('reports')
       .select();
-      print(reportList);
     setState(() {
       isLoading = false;
     });

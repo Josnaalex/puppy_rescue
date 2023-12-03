@@ -98,6 +98,7 @@ null;
                       .select('id')
                       .match({'email': email, 'password': pword}); 
                       if (data.length == 0) {
+                          // ignore: use_build_context_synchronously
                           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                             content: Text('Invalid email or password'),
                             backgroundColor: Colors.red,

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:newapp/widgets/report.dart';
 import 'package:newapp/widgets/reportandprogress.dart';
 import 'package:newapp/widgets/reportedpuppystatus.dart';
 import 'package:newapp/widgets/requeststatus.dart';
@@ -134,8 +133,8 @@ class _UserHomeState extends State<UserHome> {
                           margin: EdgeInsets.all(8.0),
                           padding: EdgeInsets.all(8.0),
                           decoration: BoxDecoration(
-                            border: Border.all(color: Colors.black12),
-                            borderRadius: BorderRadius.all(Radius.circular(10)),
+                            border: Border.all(color: Colors.black12,width: 5.0),
+                            borderRadius: BorderRadius.all(Radius.circular(20)),
                           ),
                           child: ListTile(
                             title: Text(

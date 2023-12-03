@@ -25,18 +25,13 @@ class AnimalShelterItem {
 
 class _ReportAndProgressState extends State<ReportAndProgress> {
   List<String> animalShelters = [];
-
-  String? _loc = '';
-  String? _landmark = '';
   String? _selectedShelter = 'Josna';
   dynamic shelterIds;
   final _formKey = GlobalKey<FormState>();
-  final _imagePicker = ImagePicker();
   final _locController = TextEditingController();
   final _landController = TextEditingController();
 
   XFile? _image;
-  String _location = '';
   dynamic imageFile;
   dynamic userId;
   bool isLoading = false;
@@ -70,7 +65,6 @@ class _ReportAndProgressState extends State<ReportAndProgress> {
         data.map<String>((e) => e['location'].toString()).toList();
     shelterIds = Map.fromIterables(
         shelterNames, data.map<String>((e) => e['id'].toString()).toList());
-    print("Shelter Ids: ${shelterIds}");
     // AnimalShelterItem animalShelter = AnimalShelterItem(_selectedShelter.id, _selectedShelter.location);
 
     // final shelterId = _selectedShelter!.id;
@@ -80,39 +74,6 @@ class _ReportAndProgressState extends State<ReportAndProgress> {
       isLoading = false;
     });
   }
-
-  Future<void> _pickImage() async {
-    final pickedImage =
-        await _imagePicker.pickImage(source: ImageSource.camera);
-    if (pickedImage != null) {
-      final imagePath = pickedImage.path;
-      imageFile = File(imagePath);
-
-      //   final supabase = Supabase.instance.client;
-      //   final String weblink = await supabase.storage.from('stray').upload(
-      //   'puppy/puppy1.jpg',
-      //   imageFile,
-      //   fileOptions: const FileOptions(cacheControl: '3600', upsert: false),
-      // );
-
-      //   print(weblink);
-      setState(() {
-        _image = pickedImage;
-      });
-    }
-  }
-
-  // Future<void> _getCurrentLocation() async {
-  //   try {
-  //     final Position position = await Geolocator.getCurrentPosition(
-  //         desiredAccuracy: LocationAccuracy.high);
-  //     setState(() {
-  //       _location = '${position.latitude}, ${position.longitude}';
-  //     });
-  //   } catch (e) {
-  //     print('Error getting location: $e');
-  //   }
-  // }
   void _showBottomSheet() {
     showModalBottomSheet(
       context: context,
@@ -133,6 +94,7 @@ class _ReportAndProgressState extends State<ReportAndProgress> {
                     _image = pickedImage;
                   
                 });
+                // ignore: use_build_context_synchronously
                 Navigator.pop(context);
               },
             ),
@@ -148,6 +110,7 @@ class _ReportAndProgressState extends State<ReportAndProgress> {
                   setState(() {
                      _image = pickedImage;
                   });
+                  // ignore: use_build_context_synchronously
                   Navigator.pop(context);
               },
               
@@ -182,8 +145,6 @@ class _ReportAndProgressState extends State<ReportAndProgress> {
   }
 
   Future<void> insertReport() async {
-    print(shelterIds[_selectedShelter]);
-
     final supabase = Supabase.instance.client;
     final report = {
       'location': _locController.text,
@@ -237,7 +198,7 @@ class _ReportAndProgressState extends State<ReportAndProgress> {
                 ElevatedButton.icon(
                   onPressed: _showBottomSheet,
                   icon: Icon(Icons.camera_alt),
-                  label: Text('Take Image'),
+                  label: Text('Take Image of Puppy'),
                 ),
                 SizedBox(height: 20),
 
@@ -299,7 +260,8 @@ class _ReportAndProgressState extends State<ReportAndProgress> {
                 //     )).toList(),
                 //     onChanged: (newValue) => setState(() => _selectedShelter = newValue!),
                 //   ),
-
+                SizedBox(height: 20),
+                Text('Select nearest animal shelter',style: TextStyle(fontSize: 16),),
                 DropdownButton<String>(
                   value: _selectedShelter,
                   onChanged: (String? newValue) => setState(() {
@@ -328,7 +290,15 @@ class _ReportAndProgressState extends State<ReportAndProgress> {
                       // Use _image.path to access the selected image path
                       // Use _location to access the GPS location
                       insertReport();
-                      Navigator.pop(context);
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('Report submitted successfully'),
+                          duration: Duration(seconds: 2),
+                        ),
+                      );
+                       Future.delayed(Duration(seconds: 2), () {
+                       Navigator.pop(context);
+                      });
                     }
                   },
                   child: Text('Submit'),

@@ -13,7 +13,7 @@ class AdminViewImage extends StatefulWidget {
 
 class _AdminViewImageState extends State<AdminViewImage> {
   String _imageURL = '';
-   dynamic userId;
+  dynamic userId;
   bool isLoading = false;
   dynamic adoptionDetails;
 
@@ -35,8 +35,8 @@ class _AdminViewImageState extends State<AdminViewImage> {
     });
     
   }
-  
-    Widget build(BuildContext context) {
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('Puppy Image'),

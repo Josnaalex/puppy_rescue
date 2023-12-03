@@ -47,11 +47,8 @@ class _ShelterHomeState extends State<ShelterHome> {
               ),
               ListTile(
                   title: const Text("Reports"),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => ViewReports()),
-                    );
+                  onTap: () { 
+                  Navigator.pushNamed(context, '/shelterhome');
                   }),
               ListTile(title: const Text("Adoption Requests"), onTap: () {
                 Navigator.pushNamed(context, '/adoptionrequests');
@@ -103,9 +100,9 @@ class _ShelterHomeState extends State<ShelterHome> {
                             margin: EdgeInsets.all(8.0),
                             padding: EdgeInsets.all(8.0),
                             decoration: BoxDecoration(
-                              border: Border.all(color: Colors.black12),
+                              border: Border.all(color: Colors.black12,width: 5.0),
                               borderRadius:
-                                  BorderRadius.all(Radius.circular(10)),
+                                  BorderRadius.all(Radius.circular(20)),
                             ),
                             child: ListTile(
                                 title: Text(
@@ -148,7 +145,6 @@ class _ShelterHomeState extends State<ShelterHome> {
       .from('reports')
       .select('id,location, landmark,user_id')
       .match({'shelter_id' : userId,'status':'pending'});
-      print(reportList);
     setState(() {
       isLoading = false;
     });

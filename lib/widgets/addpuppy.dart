@@ -145,11 +145,15 @@ class _AddPuppyState extends State<AddPuppy> {
                 insertPuppy();
 
                 // }
-                SnackBar snackBar = SnackBar(
-                  content: Text('Puppy details added successfully!'),
-                );
-                ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                Navigator.pop(context);
+                 ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('Puppy Added Successfully'),
+                          duration: Duration(seconds: 2),
+                        ),
+                      );
+                       Future.delayed(Duration(seconds: 2), () {
+                       Navigator.pop(context);
+                      });
               },
               child: Text('Add puppy'),
             ),

@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class LocationAndImageForm extends StatefulWidget {
@@ -21,17 +20,14 @@ class AnimalShelterItem {
 
 class _LocationAndImageFormState extends State<LocationAndImageForm> {
   List<String> animalShelters = [];
-
-  String? _loc = '';
-  String? _landmark = '';
   String? _selectedShelter = 'Josna';
   dynamic shelterIds;
   final _formKey = GlobalKey<FormState>();
-  final _imagePicker = ImagePicker();
   final _locController = TextEditingController();
   final _landController = TextEditingController();
 
   XFile? _image;
+  // ignore: unused_field, prefer_final_fields
   String _location = '';
   dynamic imageFile;
 
@@ -48,20 +44,10 @@ class _LocationAndImageFormState extends State<LocationAndImageForm> {
     final supabase = Supabase.instance.client;
 
     final data = await supabase.from('shelters').select('location, id');
-    print(data);
-    // print(response);
-    // if (response != null) {
-    //   // Handle error
-    //   return;
-    // }
-
-    // final data = response.data as List<Map<String, dynamic>>;
-    // final shelterNames = data.map((e) => e['name' 'id']).cast<String>().toList();
     final shelterNames =
         data.map<String>((e) => e['location'].toString()).toList();
     shelterIds = Map.fromIterables(
         shelterNames, data.map<String>((e) => e['id'].toString()).toList());
-    print("Shelter Ids: ${shelterIds}");
     // AnimalShelterItem animalShelter = AnimalShelterItem(_selectedShelter.id, _selectedShelter.location);
 
     // final shelterId = _selectedShelter!.id;
@@ -69,28 +55,6 @@ class _LocationAndImageFormState extends State<LocationAndImageForm> {
       animalShelters = shelterNames;
       _selectedShelter = animalShelters.first;
     });
-  }
-  
-
-  Future<void> _pickImage() async {
-    final pickedImage =
-        await _imagePicker.pickImage(source: ImageSource.camera);
-    if (pickedImage != null) {
-        final imagePath = pickedImage.path;
-        imageFile = File(imagePath);
-
-      //   final supabase = Supabase.instance.client;
-      //   final String weblink = await supabase.storage.from('stray').upload(
-      //   'puppy/puppy1.jpg',
-      //   imageFile,
-      //   fileOptions: const FileOptions(cacheControl: '3600', upsert: false),
-      // );
-
-      //   print(weblink);
-      setState(() {
-        _image = pickedImage;
-      });
-    }
   }
   void _showBottomSheet() {
     showModalBottomSheet(
@@ -112,6 +76,7 @@ class _LocationAndImageFormState extends State<LocationAndImageForm> {
                     _image = pickedImage;
                   
                 });
+                // ignore: use_build_context_synchronously
                 Navigator.pop(context);
               },
             ),
@@ -127,6 +92,7 @@ class _LocationAndImageFormState extends State<LocationAndImageForm> {
                   setState(() {
                      _image = pickedImage;
                   });
+                  // ignore: use_build_context_synchronously
                   Navigator.pop(context);
               },
               
@@ -137,22 +103,7 @@ class _LocationAndImageFormState extends State<LocationAndImageForm> {
       }
     );
   }
-
-  Future<void> _getCurrentLocation() async {
-    try {
-      final Position position = await Geolocator.getCurrentPosition(
-          desiredAccuracy: LocationAccuracy.high);
-      setState(() {
-        _location = '${position.latitude}, ${position.longitude}';
-      });
-    } catch (e) {
-      print('Error getting location: $e');
-    }
-  }
-
   Future<void> insertReport() async {
-    print(shelterIds[_selectedShelter]);
-
     final supabase = Supabase.instance.client;
     final report = {
       'location': _locController.text,
@@ -210,19 +161,6 @@ class _LocationAndImageFormState extends State<LocationAndImageForm> {
                     return null;
                   },
                 ),
-                // Location Input Field
-                // TextFormField(
-                //   decoration: InputDecoration(
-                //     labelText: 'Location',
-                //   ),
-                //   validator: (value) {
-                //     if (value == null || value.isEmpty) {
-                //       return 'Please enter a location';
-                //     }
-                //     return null;
-                //   },
-                //   onSaved: (newValue) => _loc = newValue,
-                // ),
                 SizedBox(height: 20),
 
                 // Landmark Input Field
@@ -238,25 +176,7 @@ class _LocationAndImageFormState extends State<LocationAndImageForm> {
                     return null;
                   },
                 ),
-
-                // TextFormField(
-                //   decoration: InputDecoration(
-                //     labelText: 'Landmark',
-                //   ),
-                //   onSaved: (newValue) => _landmark = newValue,
-                // ),
                 SizedBox(height: 20),
-
-                // Animal Shelter Selection Dropdown
-                // DropdownButton<int>(
-                //     value: _selectedShelter,
-                //     items: animalShelters.map((shelter) => DropdownMenuItem(
-                //       child: Text(shelter.name),
-                //       value: shelter.id,
-                //     )).toList(),
-                //     onChanged: (newValue) => setState(() => _selectedShelter = newValue!),
-                //   ),
-
                 DropdownButton<String>(
                   value: _selectedShelter,
                   onChanged: (String? newValue) => setState(() {
@@ -271,19 +191,10 @@ class _LocationAndImageFormState extends State<LocationAndImageForm> {
                   }).toList(),
                 ),
                 SizedBox(height: 20),
-                // Text('GPS Location: $_location'),
-                // SizedBox(height: 20),
-                // ElevatedButton(
-                //   onPressed: _getCurrentLocation,
-                //   child: Text('Get Current Location'),
-                // ),
                 SizedBox(height: 20),
                 ElevatedButton(
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
-                      // Perform form submission logic here
-                      // Use _image.path to access the selected image path
-                      // Use _location to access the GPS location
                       insertReport();
                       Navigator.pop(context);
                     }

@@ -70,12 +70,12 @@ class MyWidget extends StatelessWidget {
           children: [
             Text(
               "Welcome to Puppy Rescue!",
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 10),
             Text(
               "Find your new furry friend today!",
-              style: TextStyle(fontSize: 16),
+              style: TextStyle(fontSize: 22),
             ),
             Image.asset(
               "images/pupp.jpg",

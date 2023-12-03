@@ -74,7 +74,6 @@ class _UserProfileState extends State<UserProfile> {
         .from('users')
         .select()
         .match({'id': userId});
-      print(requestList);
     setState(() {
       isLoading = false;
     });
